@@ -21,6 +21,23 @@ const studentLastNameGsiName = 'studentLastNameGsi';
 exports.handler = (event) => {
   // TODO use the AWS.DynamoDB.DocumentClient to write a query against the 'SchoolStudents' table and return the results.
   // The 'SchoolStudents' table key is composed of schoolId (partition key) and studentId (range key).
+  let params;
+
+    params= {
+      TableName: tableName,
+      KeyConditionExpression: "schoolId = :schoolId and studentId = :studentId",
+      ExpressionAttributeValues: {
+        ":schoolId": event.schoolId,
+        ":studentId": event.studentId
+      },
+    };
+
+    dynamodb.query(params, function(err, data) {
+    if (err) return new Error("Error.");
+    else       return data;
+  });
+
+
 
   // TODO (extra credit) if event.studentLastName exists then query using the 'studentLastNameGsi' GSI and return the results.
 

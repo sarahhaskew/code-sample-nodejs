@@ -22,6 +22,34 @@ const tableName = 'SchoolStudents';
  */
 exports.handler = (event) => {
   // TODO validate that all expected attributes are present (assume they are all required)
+
+  const expectedAttributes = ['schoolId', 'schoolName', 'studentId', 'studentFirstName', 'studentLastName', 'studentGrade'];
+
+  const missingAttributes = expectedAttributes.every((studentRecord) => {
+    return studentRecord.isEmpty();                  //returns true if empty
+  });
+  if (missingAttributes)
+    return new Error("Error: Not all expected attributes are present.");
+
   // TODO use the AWS.DynamoDB.DocumentClient to save the 'SchoolStudent' record
   // The 'SchoolStudents' table key is composed of schoolId (partition key) and studentId (range key).
+  const params = {
+    TableName: tableName,
+    Item: {
+      schoolId: event.schoolId,
+      studentId: event.studentId,
+      schoolName: event.schoolName,
+      studentFirstName: event.studentFirstName,
+      studentLastName: event.studentLastName,
+      studentGrade: event.studentGrade
+    }
+  };
+
+  dynamodb.put(params, function(err, data) {
+    if (err) return new Error("Error.");
+    return data;
+  });
+
+
+
 };
